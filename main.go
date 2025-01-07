@@ -1,10 +1,10 @@
 package main
 
 import (
+	db "app/postgres"
 	"fmt"
 	"net/http"
 	"os"
-	db "app/postgres"
 )
 
 func getData(w http.ResponseWriter, req *http.Request) {
@@ -36,8 +36,12 @@ func getDrivers(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, data)
 }
 func main() {
-   	db.InitDB()
-	defer db.Connection.Close() 
+	err := db.InitDB()
+	if err != nil {
+		fmt.Println("Failed to initialize database:", err)
+		return
+	}
+	defer db.Connection.Close()
 	http.Handle("/", http.FileServer(http.Dir("./static")))
 	http.HandleFunc("/data", getData)
 	http.HandleFunc("/drivers", getDrivers)
