@@ -7,9 +7,6 @@ import (
 	"os"
 )
 
-func getData(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "Hello world\n")
-}
 func getDrivers(w http.ResponseWriter, req *http.Request) {
 	rows, err := db.Connection.Query("SELECT name FROM drivers")
 	if err != nil {
@@ -43,7 +40,6 @@ func main() {
 	}
 	defer db.Connection.Close()
 	http.Handle("/", http.FileServer(http.Dir("./static")))
-	http.HandleFunc("/data", getData)
 	http.HandleFunc("/drivers", getDrivers)
 
 	serverEnv := os.Getenv("SERVER_ENV")
