@@ -7,6 +7,9 @@ import (
 	"os"
 )
 
+//func getDrivers(w http.ResponseWriter, req *http.Request) {
+//    fmt.Fprintf(w, "Hello\n")
+//}
 func getDrivers(w http.ResponseWriter, req *http.Request) {
 	rows, err := db.Connection.Query("SELECT name FROM drivers")
 	if err != nil {
@@ -33,11 +36,12 @@ func getDrivers(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, data)
 }
 func main() {
-	err := db.InitDB()
-	if err != nil {
-		fmt.Println("Failed to initialize database:", err)
-		return
-	}
+    db.InitDB()
+//	if err != nil {
+//		fmt.Println("Failed to initialize database:", err)
+//		return
+//	}
+    fmt.Println("DB Init Complete")
 	defer db.Connection.Close()
 	http.Handle("/", http.FileServer(http.Dir("./static")))
 	http.HandleFunc("/drivers", getDrivers)
